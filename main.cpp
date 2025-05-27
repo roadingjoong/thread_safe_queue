@@ -55,7 +55,7 @@ void client_func(Queue* queue, Request requests[], int n_request) {
 
 int main(void) {
 	srand((unsigned int)time(NULL));
-
+/*
 	//워크로드 생성(GETRANGE는 패스)
 	Request requests[REQUEST_PER_CLINET];
 
@@ -67,10 +67,22 @@ int main(void) {
 	for (int i = REQUEST_PER_CLINET / 2; i < REQUEST_PER_CLINET; i++) {
 		requests[i].op = GET;
 	}
-
+*/
+//-----
 	Queue* queue = init();
-	//if (queue == NULL) return 0;
 
+	Item test1 = {1, (void*)1111};
+	Item test2 = {2, (void*)2222};
+
+	enqueue(queue, test1);
+	enqueue(queue, test2);
+
+	cout<<queue->head->item.key<<", "<<queue->tail->item.key<<endl;
+	cout<<queue->head->next->item.key<<endl;
+
+//---
+	//if (queue == NULL) return 0;
+/*
 	//일단 한 개 뿐인데, 그래도 multi client라고 가정하기
 	thread client = thread(client_func, queue, requests, REQUEST_PER_CLINET);
 	client.join();
@@ -80,7 +92,7 @@ int main(void) {
 	// 의미 없는 작업
 	cout << "sum of returned keys = " << sum_key << endl;
 	cout << "sum of returned values = " << sum_value << endl;
-
+*/
 	// total_average_response_time = total_response_time / n_cleint;
 	// printf("total average response time = ....
 	return 0;

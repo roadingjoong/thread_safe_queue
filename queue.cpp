@@ -19,7 +19,10 @@ void release(Queue* queue) {
 
 Node* nalloc(Item item) {
 	//Node 생성, item으로 초기화
-	return NULL;
+	Node* node = new Node;
+	node->item = item;
+	node->next = nullptr;
+	return node;
 }
 
 
@@ -34,8 +37,19 @@ Node* nclone(Node* node) {
 
 
 Reply enqueue(Queue* queue, Item item) {
-	Reply reply = { false, NULL };
-	return reply;
+	lock_guard<mutex> lock(queue->mtx);
+
+	Node* node = nalloc(item);
+
+	if(queue->tail == nullptr){
+		queue->tail = node;
+		queue->head = queue->tail;
+	}else{
+		queue->tail->next = node;
+		queue->tail = node;
+	}
+
+	return {true, item};
 }
 
 Reply dequeue(Queue* queue) {
