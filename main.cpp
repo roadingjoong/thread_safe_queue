@@ -4,13 +4,14 @@
 #include <thread>
 #include <atomic>
 #include "queue.h"
+#include <cstdint>
 
 using namespace std;
 
 #define REQUEST_PER_CLINET	10000
 
-atomic<int> sum_key = 0;
-atomic<int> sum_value = 0;
+atomic<int> sum_key{0};
+atomic<int> sum_value{0};
 
 typedef enum {
 	GET,
@@ -36,8 +37,7 @@ void client_func(Queue* queue, Request requests[], int n_request) {
 
 		if (reply.success) {
 			sum_key += reply.item.key;
-			sum_value += (int)reply.item.value;
-
+			sum_value += reinterpret_cast<intptr_t>(reply.item.value);
 		}
 		else {
 			// noop
@@ -62,7 +62,7 @@ int main(void) {
 	for (int i = 0; i < REQUEST_PER_CLINET / 2; i++) {
 		requests[i].op = SET;
 		requests[i].item.key = i;
-		requests[i].item.value = (void*)(rand() % 1000000);
+		requests[i].item.value = reinterpret_cast<void*>(static_cast<intptr_t>(rand() % 1000000));
 	}
 	for (int i = REQUEST_PER_CLINET / 2; i < REQUEST_PER_CLINET; i++) {
 		requests[i].op = GET;
