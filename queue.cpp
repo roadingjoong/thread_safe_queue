@@ -5,7 +5,10 @@
 
 
 Queue* init(void) {
-	return NULL;
+	Queue* queue = new Queue;
+	queue->head = nullptr;
+	queue->tail = nullptr;
+	return queue;
 }
 
 

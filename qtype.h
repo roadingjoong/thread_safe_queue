@@ -1,4 +1,6 @@
 //제출용, 수정가능
+#include <mutex>
+using namespace std;
 
 #ifndef _QTYPE_H  // header guard
 #define _QTYPE_H
@@ -26,6 +28,7 @@ typedef struct node_t {
 typedef struct {
     Node* head, *tail;
     // 필드 추가 기능
+    mutex mtx;
 } Queue;
 
 #endif
