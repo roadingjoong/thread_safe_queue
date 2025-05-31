@@ -27,7 +27,7 @@ Node* nalloc(Item item) {
 
 
 void nfree(Node* node) {
-	return;
+	delete(node);
 }
 
 
@@ -53,8 +53,24 @@ Reply enqueue(Queue* queue, Item item) {
 }
 
 Reply dequeue(Queue* queue) {
-	Reply reply = { false, NULL };
-	return reply;
+	lock_guard<mutex> lock(queue->mtx);
+
+	if(queue->head == nullptr){
+		return {false, {0, NULL}};
+	}
+
+	Node* node = queue->head;
+	Item item = node->item;
+
+	queue->head = node->next;
+
+	if(queue->head == nullptr){
+		queue->tail = nullptr;
+	}
+
+	nfree(node);
+
+	return {true, item};
 }
 
 Queue* range(Queue* queue, Key start, Key end) {
