@@ -13,7 +13,13 @@ Queue* init(void) {
 
 
 void release(Queue* queue) {
-	return;
+	Node* node = queue->head;
+	while(node != nullptr){
+		Node* nextnode = node->next;
+		nfree(node);
+		node = nextnode;
+	}
+	delete(queue);
 }
 
 

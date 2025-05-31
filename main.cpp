@@ -69,11 +69,32 @@ int main(void) {
 		requests[i].op = GET;
 	} //5000~9999
 
-
-
 //-----
 	Queue* queue = init();
-// 큐 삽입 및 노드 생성 테스트 
+
+	//if (queue == NULL) return 0;
+	//일단 한 개 뿐인데, 그래도 multi client라고 가정하기
+	thread client = thread(client_func, queue, requests, REQUEST_PER_CLINET);
+	client.join();
+
+	release(queue);
+//--------
+
+	// 의미 없는 작업
+	cout << "sum of returned keys = " << sum_key << endl;
+	cout << "sum of returned values = " << sum_value << endl;
+
+	// total_average_response_time = total_response_time / n_cleint;
+	// printf("total average response time = ....
+	return 0;
+}
+
+
+
+//------Test Code------
+/* 
+	//enqueue, dequeue TEST
+	
 	Item test1 = {1, (void*)1111};
 	Item test2 = {2, (void*)2222};
 	Item test3 = {3, (void*)3333};
@@ -100,23 +121,4 @@ int main(void) {
 	cout<<"dequeue"<<endl;
 	dequeue(queue);
 	cout<<queue->head->item.key<<", "<<queue->tail->item.key<<endl;
-
-//--------
-
-
-	//if (queue == NULL) return 0;
-
-	//일단 한 개 뿐인데, 그래도 multi client라고 가정하기
-//	thread client = thread(client_func, queue, requests, REQUEST_PER_CLINET);
-//	client.join();
-
-//	release(queue);
-
-	// 의미 없는 작업
-	//cout << "sum of returned keys = " << sum_key << endl;
-	//cout << "sum of returned values = " << sum_value << endl;
-
-	// total_average_response_time = total_response_time / n_cleint;
-	// printf("total average response time = ....
-	return 0;
-}
+*/
