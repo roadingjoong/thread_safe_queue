@@ -24,6 +24,9 @@ typedef struct {
 	Item item;
 } Request;
 
+bool check = false;
+Queue* newqueue;
+
 void client_func(Queue* queue, Request requests[], int n_request) {
 	Reply reply = { false, 0 };
 
@@ -41,6 +44,11 @@ void client_func(Queue* queue, Request requests[], int n_request) {
 		}
 		else {
 			// noop
+		}
+
+		if(requests[i].op == GET && check == false){
+			newqueue = range(queue, 1000, 1010);
+			check = true;
 		}
 	}
 
@@ -77,7 +85,16 @@ int main(void) {
 	thread client = thread(client_func, queue, requests, REQUEST_PER_CLINET);
 	client.join();
 
+	cout << "-----------" << endl;
+	Node* node = newqueue->head;
+    while(node != nullptr){
+        cout << node->item.key << endl;
+        node = node->next;
+    }
+	cout << "---------" << endl;
+
 	release(queue);
+	release(newqueue);
 //--------
 
 	// 의미 없는 작업

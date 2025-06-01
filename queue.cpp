@@ -38,7 +38,15 @@ void nfree(Node* node) {
 
 
 Node* nclone(Node* node) {
-	return NULL;
+	if(node == nullptr){
+		return nullptr;
+	}
+	
+	Node* newnode = new Node;
+	newnode->item = node->item;
+	newnode->next = nullptr;
+
+	return newnode;
 }
 
 
@@ -80,5 +88,21 @@ Reply dequeue(Queue* queue) {
 }
 
 Queue* range(Queue* queue, Key start, Key end) {
-	return NULL;
+	Queue* newqueue = init();
+	lock_guard<mutex> lock(queue->mtx);
+
+	Node* node = queue->head;
+
+	while(node!=nullptr){
+		if(node->item.key >= start && node->item.key <= end){
+			Node* newnode = nclone(node);
+
+			if(newnode != nullptr){
+				enqueue(newqueue, newnode->item);
+			}
+		}
+		node = node->next;
+	}
+
+	return newqueue;
 }
