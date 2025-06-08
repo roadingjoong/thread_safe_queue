@@ -10,8 +10,8 @@ using namespace std;
 
 #define REQUEST_PER_CLINET	10000
 
-atomic<int> sum_key{0};
-atomic<int> sum_value{0};
+atomic<intptr_t> sum_key{0};
+atomic<intptr_t> sum_value{0};
 
 typedef enum {
 	GET,
@@ -24,8 +24,8 @@ typedef struct {
 	Item item;
 } Request;
 
-bool check = false;
-Queue* newqueue;
+//bool check = false;
+//Queue* newqueue;
 
 void client_func(Queue* queue, Request requests[], int n_request) {
 	Reply reply = { false, 0 };
@@ -45,11 +45,11 @@ void client_func(Queue* queue, Request requests[], int n_request) {
 		else {
 			// noop
 		}
-
+		/*
 		if(requests[i].op == GET && check == false){
 			newqueue = range(queue, 1000, 1010);
 			check = true;
-		}
+		}*/
 	}
 
 	// elapsed_time = finish_time - start_time;
@@ -82,24 +82,59 @@ int main(void) {
 
 	//if (queue == NULL) return 0;
 	//일단 한 개 뿐인데, 그래도 multi client라고 가정하기
-	thread client = thread(client_func, queue, requests, REQUEST_PER_CLINET);
-	client.join();
+	//thread client = thread(client_func, queue, requests, REQUEST_PER_CLINET);
+	//client.join();
 
-	cout << "-----------" << endl;
-	Node* node = newqueue->head;
-    while(node != nullptr){
-        cout << node->item.key << endl;
-        node = node->next;
-    }
-	cout << "---------" << endl;
+	//enqueue, dequeue TEST
+	int a1 = 1111;int a2 = 2222;int a3 = 3333;int a4 = 4444; int a5 = 5555;
+
+	Item test1 = {1, &a1, sizeof(int)};
+	Item test2 = {2, &a2, sizeof(int)};
+	Item test3 = {3, &a3, sizeof(int)};
+	Item test4 = {4, &a4, sizeof(int)};
+	Item test5 = {3, &a5, sizeof(int)};
+
+	cout<<"enqueue 1, 2"<<endl;
+	enqueue(queue, test1);
+	enqueue(queue, test2);
+	cout<<queue->head->item.key<<", "<<queue->tail->item.key<<endl;
+	cout<<*(int*)queue->head->item.value<<", "<<*(int*)queue->tail->item.value<<endl;
+	cout<<"next:"<<queue->head->next->item.key<<endl;
+
+	cout<<"dequeue"<<endl;
+	dequeue(queue);
+	cout<<queue->head->item.key<<", "<<queue->tail->item.key<<endl;
+	cout<<*(int*)queue->head->item.value<<", "<<*(int*)queue->tail->item.value<<endl;
+
+	cout<<"enqueue 3"<<endl;
+	enqueue(queue, test3);
+	cout<<queue->head->item.key<<", "<<queue->tail->item.key<<endl;
+	cout<<*(int*)queue->head->item.value<<", "<<*(int*)queue->tail->item.value<<endl;
+
+	cout<<"enqueue 3"<<endl;
+	enqueue(queue, test5);
+	cout<<queue->head->item.key<<", "<<queue->tail->item.key<<endl;
+	cout<<*(int*)queue->head->item.value<<", "<<*(int*)queue->tail->item.value<<endl;
+
+
+	cout<<"enqueue 4"<<endl;
+	enqueue(queue, test4);
+	cout<<queue->head->item.key<<", "<<queue->tail->item.key<<endl;
+	cout<<*(int*)queue->head->item.value<<", "<<*(int*)queue->tail->item.value<<endl;
+
+
+	cout<<"dequeue"<<endl;
+	dequeue(queue);
+	cout<<queue->head->item.key<<", "<<queue->tail->item.key<<endl;
+	cout<<*(int*)queue->head->item.value<<", "<<*(int*)queue->tail->item.value<<endl;
 
 	release(queue);
-	release(newqueue);
+	//release(newqueue);
 //--------
 
 	// 의미 없는 작업
-	cout << "sum of returned keys = " << sum_key << endl;
-	cout << "sum of returned values = " << sum_value << endl;
+	//cout << "sum of returned keys = " << sum_key << endl;
+	//cout << "sum of returned values = " << sum_value << endl;
 
 	// total_average_response_time = total_response_time / n_cleint;
 	// printf("total average response time = ....
@@ -138,4 +173,14 @@ int main(void) {
 	cout<<"dequeue"<<endl;
 	dequeue(queue);
 	cout<<queue->head->item.key<<", "<<queue->tail->item.key<<endl;
+*/
+
+/*
+	cout << "-----------" << endl;
+	Node* node = newqueue->head;
+    while(node != nullptr){
+        cout << node->item.key << endl;
+        node = node->next;
+    }
+	cout << "---------" << endl;
 */
