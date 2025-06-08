@@ -50,7 +50,13 @@ Node* nclone(Node* node) {
 	}
 	
 	Node* newnode = new Node;
-	newnode->item = node->item;
+	
+	newnode->item.key = node->item.key;
+	newnode->item.value_size = node->item.value_size;
+
+	newnode->item.value = malloc(node->item.value_size);
+	memcpy(newnode->item.value, node->item.value, node->item.value_size);
+
 	newnode->next = nullptr;
 
 	return newnode;
